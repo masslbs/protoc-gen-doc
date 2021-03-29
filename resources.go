@@ -13,4 +13,6 @@ var (
 	markdownTmpl []byte
 	//go:embed resources/scalars.json
 	scalarsJSON []byte
+	//go:embed resources/restructuredtext.tmpl
+	reStructuredTextTmpl []byte
 )

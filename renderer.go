@@ -20,6 +20,7 @@ const (
 	RenderTypeHTML
 	RenderTypeJSON
 	RenderTypeMarkdown
+	RenderTypeReStructuredText
 )
 
 // NewRenderType creates a RenderType from the supplied string. If the type is not known, (0, error) is returned. It is
@@ -34,6 +35,8 @@ func NewRenderType(renderType string) (RenderType, error) {
 		return RenderTypeJSON, nil
 	case "markdown":
 		return RenderTypeMarkdown, nil
+	case "restructuredtext":
+		return RenderTypeReStructuredText, nil
 	}
 
 	return 0, errors.New("Invalid render type")
@@ -54,6 +57,8 @@ func (rt RenderType) renderer() (Processor, error) {
 		return new(jsonRenderer), nil
 	case RenderTypeMarkdown:
 		return &htmlRenderer{string(tmpl)}, nil
+	case RenderTypeReStructuredText:
+		return &htmlRenderer{string(tmpl)}, nil
 	}
 
 	return nil, errors.New("Unable to create a processor")
@@ -69,6 +74,8 @@ func (rt RenderType) template() ([]byte, error) {
 		return nil, nil
 	case RenderTypeMarkdown:
 		return markdownTmpl, nil
+	case RenderTypeReStructuredText:
+		return reStructuredTextTmpl, nil
 	}
 
 	return nil, errors.New("Couldn't find template for render type")
@@ -90,10 +97,12 @@ type Processor interface {
 // supplying a non-empty string as the last parameter.
 //
 // Example: generating an HTML template (assuming you've got a Template object)
-//     data, err := RenderTemplate(RenderTypeHTML, &template, "")
+//
+//	data, err := RenderTemplate(RenderTypeHTML, &template, "")
 //
 // Example: generating a custom template (assuming you've got a Template object)
-//     data, err := RenderTemplate(RenderTypeHTML, &template, "{{range .Files}}{{.Name}}{{end}}")
+//
+//	data, err := RenderTemplate(RenderTypeHTML, &template, "{{range .Files}}{{.Name}}{{end}}")
 func RenderTemplate(kind RenderType, template *Template, inputTemplate string) ([]byte, error) {
 	if inputTemplate != "" {
 		processor := &textRenderer{inputTemplate}
