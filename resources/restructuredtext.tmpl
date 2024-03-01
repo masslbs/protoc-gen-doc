@@ -1,6 +1,5 @@
-######################
-Protocol Documentation
-######################
+.. contents:: Table of Contents
+   :depth: 3
 
 {{range .Files}}
 {{$file_name := .Name}}
@@ -27,7 +26,7 @@ Protocol Documentation
    :header: "Field", "Type", "Label", "Description"
    :widths: auto
 {{range .Fields }}
-   "{{.Name}}", ":ref:`ref_{{.FullType}}`", "{{.Label}}", "{{if (index .Options "deprecated"|default false)}}**Deprecated.** {{end}}{{nobr .Description}}{{if .DefaultValue}} Default: {{.DefaultValue}}{{end}}"
+   "{{.Name}}", ":ref:`ref_{{.FullType}}`", "{{.Label}}{{if .IsOneof}}{{.OneofDecl}}{{end}}", "{{if (index .Options "deprecated"|default false)}}**Deprecated.** {{end}}{{nobr .Description}}{{if .DefaultValue}} Default: {{.DefaultValue}}{{end}}"
 {{- end}}
 {{end}}
 
